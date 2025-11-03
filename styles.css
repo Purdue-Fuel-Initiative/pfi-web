@@ -114,6 +114,13 @@ main {
     letter-spacing: 2px;
 }
 
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
 .cta-button {
     background-color: var(--accent-red);
     color: var(--primary-light);
@@ -133,6 +140,16 @@ main {
     background-color: #a00016;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(203, 0, 27, 0.3);
+}
+
+.cta-button-secondary {
+    background-color: var(--primary-dark);
+    color: var(--primary-light);
+}
+
+.cta-button-secondary:hover {
+    background-color: #2a2a2a;
+    box-shadow: 0 5px 15px rgba(21, 19, 22, 0.3);
 }
 
 .about {
@@ -256,6 +273,19 @@ main {
     font-size: 2.5rem;
     margin-bottom: 3rem;
     color: var(--primary-dark);
+}
+
+.calendar-container {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+.calendar-container iframe {
+    width: 100%;
+    max-width: 800px;
+    height: 600px;
 }
 
 .event-list {
@@ -465,26 +495,30 @@ footer p {
         padding: 1rem;
         display: none;
     }
-    
+
     .hero h1 {
         font-size: 2rem;
     }
-    
+
     .features,
     .program-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .contact-content {
         grid-template-columns: 1fr;
     }
-    
+
     .event-card {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .event-date {
         margin: 0 auto;
+    }
+
+    .calendar-container iframe {
+        height: 400px;
     }
 }
