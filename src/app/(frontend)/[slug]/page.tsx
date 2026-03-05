@@ -6,7 +6,7 @@ import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { RichText } from '@/components/RichText'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 type Args = {
   params: Promise<{ slug: string }>
@@ -18,7 +18,10 @@ export default async function Page({ params }: Args) {
 
   const result = await payload.find({
     collection: 'pages',
-    where: { slug: { equals: slug } },
+    where: {
+      slug: { equals: slug },
+      _status: { equals: 'published' },
+    },
     limit: 1,
   })
 

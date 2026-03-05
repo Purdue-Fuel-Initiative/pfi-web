@@ -9,7 +9,7 @@ import { Programs } from '@/components/Programs'
 import { Contact } from '@/components/Contact'
 import { Footer } from '@/components/Footer'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 export default async function HomePage() {
   const payload = await getPayload({ config })

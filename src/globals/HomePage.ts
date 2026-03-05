@@ -16,6 +16,7 @@ export const HomePage: GlobalConfig = {
         { name: 'joinButtonLabel', type: 'text', label: 'Join Button Label', defaultValue: 'Join PFI' },
         { name: 'instagramHandle', type: 'text', label: 'Instagram Handle', defaultValue: '@pfi_purdue' },
         { name: 'instagramUrl', type: 'text', label: 'Instagram URL', defaultValue: 'https://www.instagram.com/pfi_purdue' },
+        { name: 'heroLogo', type: 'upload', relationTo: 'media', label: 'Hero Logo (optional, uses default if empty)' },
       ],
     },
     {
@@ -49,6 +50,7 @@ export const HomePage: GlobalConfig = {
           fields: [
             { name: 'title', type: 'text', required: true },
             { name: 'description', type: 'textarea', required: true },
+            { name: 'image', type: 'upload', relationTo: 'media', label: 'Card Image (optional)' },
           ],
         },
       ],
@@ -68,6 +70,7 @@ export const HomePage: GlobalConfig = {
           fields: [
             { name: 'title', type: 'text', required: true },
             { name: 'description', type: 'textarea', required: true },
+            { name: 'image', type: 'upload', relationTo: 'media', label: 'Card Image (optional)' },
           ],
         },
       ],

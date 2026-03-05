@@ -8,15 +8,19 @@ type HeroData = {
   joinButtonLabel?: string | null
   instagramHandle?: string | null
   instagramUrl?: string | null
+  heroLogo?: { url?: string | null; alt?: string | null } | number | null
 }
 
 export function Hero({ data }: { data: HeroData }) {
   const taglineLines = (data.tagline || '').split('\n')
+  const heroLogo = typeof data.heroLogo === 'object' ? data.heroLogo : null
+  const logoSrc = heroLogo?.url || '/pfi-logo-full.svg'
+  const logoAlt = heroLogo?.alt || 'PFI Logo'
 
   return (
     <section id="home" className="hero">
       <div className="hero-content">
-        <img src="/pfi-logo-full.svg" alt="PFI Logo" className="hero-logo" />
+        <img src={logoSrc} alt={logoAlt} className="hero-logo" />
         <h1>{data.title}</h1>
         <p className="tagline">
           {taglineLines.map((line, i) => (

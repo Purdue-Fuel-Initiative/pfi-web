@@ -1,4 +1,5 @@
 import React from 'react'
+import { MobileMenuToggle } from './MobileMenuToggle'
 
 type NavLink = {
   label: string
@@ -24,13 +25,13 @@ export function Header({ navLinks }: { navLinks?: NavLink[] | null }) {
           <a href="/" className="logo">
             <img src="/pfi-logo-acronym.svg" alt="PFI Logo" className="logo-img" />
           </a>
-          <ul className="nav-menu">
+          <MobileMenuToggle>
             {links.map((link, i) => (
               <li key={i}>
                 <a href={link.href}>{link.label}</a>
               </li>
             ))}
-          </ul>
+          </MobileMenuToggle>
         </div>
       </nav>
     </header>
