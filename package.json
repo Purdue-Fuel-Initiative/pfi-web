@@ -1,0 +1,33 @@
+{
+  "name": "pfi-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+    "generate:types": "payload generate:types",
+    "seed": "tsx src/seed.ts"
+  },
+  "dependencies": {
+    "@payloadcms/db-postgres": "^3.28.1",
+    "@payloadcms/next": "^3.28.1",
+    "@payloadcms/richtext-lexical": "^3.28.1",
+    "cross-env": "^7.0.3",
+    "graphql": "^16.10.0",
+    "next": "15.4.11",
+    "payload": "^3.28.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}
