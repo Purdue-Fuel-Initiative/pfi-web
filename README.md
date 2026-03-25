@@ -4,8 +4,8 @@ Static website for Purdue Fuel Initiative (PFI), a student club at Purdue Univer
 
 ## Links
 
-- https://pmxi.github.io/pfi-web/
 - https://www.purduefuelinitiative.org
+- https://Purdue-Fuel-Initiative.github.io/pfi-web/
 
 ## Local Development
 
