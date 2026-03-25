@@ -467,6 +467,11 @@ footer p {
     margin-bottom: 1.5rem;
 }
 
+.footer-note {
+    color: var(--primary-light);
+    font-size: 0.95rem;
+}
+
 .social-links {
     display: flex;
     gap: 2rem;

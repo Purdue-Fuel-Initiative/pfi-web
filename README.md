@@ -15,7 +15,7 @@ Run a local static file server from the repository root:
 python3 -m http.server 8000 -d src
 ```
 
-Then open `http://localhost:8000`.
+Then open <http://localhost:8000>.
 
 ## Brand
 
