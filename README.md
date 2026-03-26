@@ -1,6 +1,6 @@
 # Purdue Fuel Initiative Website
 
-Static website for Purdue Fuel Initiative (PFI), a student club at Purdue University in West Lafayette. Most members are Chemical Engineering undergraduate students.
+Website for Purdue Fuel Initiative (PFI), a student club at Purdue University in West Lafayette. Most members are Chemical Engineering undergraduate students.
 
 ## Links
 
