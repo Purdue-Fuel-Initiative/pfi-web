@@ -34,6 +34,8 @@ This site is deployed with GitHub Pages using GitHub Actions.
 
 Any change pushed to `master` will automatically update the live site after the deployment workflow finishes.
 
+Because `master` deploys to production, contributors should usually make changes in a branch and open a pull request instead of pushing directly to `master`.
+
 ### Custom Domain and DNS
 
 The site uses the custom domain `purduefuelinitiative.org`.
