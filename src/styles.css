@@ -391,6 +391,71 @@ main {
     background: rgba(203, 0, 27, 0.2);
 }
 
+.sponsor {
+    padding: 5rem 0;
+    background-color: white;
+}
+
+.sponsor h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: #000;
+}
+
+.sponsor-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.sponsor-tier {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap:20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+
+}
+
+.tier-block {
+    flex: 1;                   
+    min-width: 200px;         
+    border: 2px solid #333;  
+    padding: 20px;
+    border-radius: 8px;    
+    text-align: center;
+    background-color: #f9f9f9; 
+}
+
+.sponsor img {
+    max-width: 100%; 
+    height: auto;    
+    display: block;  
+    margin: 0 auto;  
+}
+
+.tier-detail {
+    border-bottom: 2px solid #000;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+.stakeholder {
+    text-align: center;
+    justify-content: center;
+    max-width: 300px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.h2 {
+    margin-top: 50px;
+}
+
+
 .contact-form h3 {
     color: var(--accent-red);
     font-size: 1.5rem;
@@ -521,9 +586,5 @@ footer p {
 
     .event-date {
         margin: 0 auto;
-    }
-
-    .calendar-container iframe {
-        height: 400px;
     }
 }
