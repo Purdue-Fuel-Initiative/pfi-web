@@ -123,5 +123,13 @@
             </div>
         </div>
     </footer>
+    <script>
+        const logo = document.querySelector('.logo');
+        const navMenu = document.querySelector('.nav-menu');
+
+        logo.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>
