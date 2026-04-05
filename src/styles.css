@@ -555,7 +555,7 @@ footer p {
 
 @media (max-width: 768px) {
     .nav-menu {
-        flex-direction: column;
+        flex-direction: row;
         gap: 1rem;
         position: static;
         top: 100%;
