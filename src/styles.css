@@ -552,7 +552,8 @@ footer p {
 .social-links a:hover {
     color: var(--accent-red);
 }
-    /* ============================================
+
+/* ============================================
        色や大きさはここでまとめて決める。
        あとから変えたいときは、この :root の中だけ触ればOK。
        ============================================ */
@@ -575,7 +576,7 @@ body {
     background: #ffffff;
 }
  
-    /* 全体を中央に寄せて、横幅が広がりすぎないようにする */
+/* 全体を中央に寄せて、横幅が広がりすぎないようにする */
 .page {
     max-width: 720px;
     margin: 0 auto;
@@ -595,7 +596,7 @@ h1 {
     line-height: 1.6;
 }
  
-    /* 凡例(選択済み / 未選択の見本) */
+/* 凡例(選択済み / 未選択の見本) */
 .legend {
     display: flex;
     gap: 20px;
@@ -618,14 +619,14 @@ h1 {
     border-color: var(--gold-dark);
 }
  
-    /* 画面が狭いスマホでも、表がはみ出さずスクロールできるようにする */
+/* 画面が狭いスマホでも、表がはみ出さずスクロールできるようにする */
 .grid-wrap {
     overflow-x: auto;
 }
  
-    /* ============================================
-       表(グリッド)本体
-       ============================================ */
+/* ============================================
+    表(グリッド)本体
+    ============================================ */
 table {
     width: 100%;
     min-width: 420px;
@@ -633,7 +634,7 @@ table {
     table-layout: fixed;         /* 曜日の列を同じ幅にそろえる */
 }
  
-    /* 曜日の見出し行。スクロールしても上に残るようにする */
+/* 曜日の見出し行。スクロールしても上に残るようにする */
 thead th {
     position: sticky;
     top: 0;
@@ -643,7 +644,7 @@ thead th {
     border-bottom: 2px solid var(--gold-dark);
 }
  
-    /* 左端の時刻ラベル列 */
+/* 左端の時刻ラベル列 */
 tbody th {
     width: 56px;
     padding-right: 8px;
@@ -653,14 +654,14 @@ tbody th {
     font-weight: 600;
 }
  
-    /* 30分の行は、ラベルを薄く小さくする */
+/* 30分の行は、ラベルを薄く小さくする */
 tr.half th {
     font-weight: 400;
     font-size: 0.7rem;
     color: var(--muted);
 }
  
-    /* 予定を入れるマス */
+/* 予定を入れるマス */
 td {
     height: var(--cell-height);
     border-left: 1px solid var(--line);
@@ -675,47 +676,65 @@ tbody tr:last-child td {
     border-bottom: 1px solid var(--line);
 }
  
-    /* マウスを乗せたとき */
+/* マウスを乗せたとき */
 td:hover {
     background: var(--gold-light);
 }
  
-    /* 選択されたマス。JavaScriptがこのクラスをつけ外しする */
+/* 選択されたマス。JavaScriptがこのクラスをつけ外しする */
 td.selected {
     background: var(--gold);
 }
  
-    /* マスを押せることが分かるように、クリック中は少し濃くする */
+/* マスを押せることが分かるように、クリック中は少し濃くする */
 td:active {
     background: var(--gold);
     opacity: 0.8;
 }
  
-    /* 名前の入力欄 */
+/* 名前欄・希望時間数欄をまとめた行 */
 .controls {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    align-items: flex-end;
+    gap: 20px;
     margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.controls .name-group,
+.controls .hours-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.controls .name-group {
+    flex: 1;
+    min-width: 160px;
 }
 .controls label {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 600;
+    color: var(--muted);
 }
 .controls input {
-    flex: 1;
-    max-width: 280px;
     padding: 8px 10px;
     font: inherit;
     border: 1px solid var(--line);
     border-radius: 4px;
+}
+.controls .name-group input {
+    width: 100%;
+    max-width: 280px;
+}
+/* 希望時間数の欄だけ、名前欄より幅を狭くする */
+.controls .hours-group input {
+    width: 90px;
 }
 .controls input:focus {
     outline: 2px solid var(--gold-dark);
     outline-offset: 1px;
 }
  
-    /* 表の下の、選んだ数と保存ボタン */
+/* 表の下の、選んだ数と保存ボタン */
 .save-area {
     margin-top: 20px;
 }
