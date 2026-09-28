@@ -34,49 +34,49 @@ function getSelectedSlots() {
 }
  
     // 2. 「選んだ数」と「希望時間数との差」の表示を更新する(1マス = 30分 = 0.5時間)
-    function updateSummary() {
-      const count = getSelectedSlots().length;
-      const selectedHours = count * 0.5;
-      const wanted = parseFloat(hoursInput.value);   // 空欄や数字以外なら NaN になる
+function updateSummary() {
+  const count = getSelectedSlots().length;
+  const selectedHours = count * 0.5;
+  const wanted = parseFloat(hoursInput.value);   // 空欄や数字以外なら NaN になる
  
-      let text = "Selected: " + count + " slots (" + selectedHours + " hours)";
+  let text = "Selected: " + count + " slots (" + selectedHours + " hours)";
  
-      if (!isNaN(wanted) && wanted > 0) {
-        const diff = selectedHours - wanted;
-        if (diff < 0) {
-          text += " — " + Math.abs(diff) + " hrs below what you asked for";
-        } else if (diff > 0) {
-          text += " — " + diff + " hrs above what you asked for";
-        } else {
-          text += " — matches what you asked for";
-        }
-      }
- 
-      summary.textContent = text;
+  if (!isNaN(wanted) && wanted > 0) {
+    const diff = selectedHours - wanted;
+    if (diff < 0) {
+      text += " — " + Math.abs(diff) + " hrs below what you asked for";
+    } else if (diff > 0) {
+      text += " — " + diff + " hrs above what you asked for";
+    } else {
+      text += " — matches what you asked for";
     }
+  }
+ 
+  summary.textContent = text;
+}
  
     // 3. Saveボタン
-    saveButton.addEventListener("click", function () {
-      const name = nameInput.value.trim();
-      const slots = getSelectedSlots();
-      const wanted = parseFloat(hoursInput.value);
+saveButton.addEventListener("click", function () {
+  const name = nameInput.value.trim();
+  const slots = getSelectedSlots();
+  const wanted = parseFloat(hoursInput.value);
  
-      if (name === "") {
-        message.textContent = "Enter your name first.";
-        return;
-      }
-      if (isNaN(wanted) || wanted <= 0) {
-        message.textContent = "Enter how many hours you'd like per week.";
-        return;
-      }
-      if (slots.length === 0) {
-        message.textContent = "Select at least one time slot.";
-        return;
-      }
+  if (name === "") {
+    message.textContent = "Enter your name first.";
+    return;
+  }
+  if (isNaN(wanted) || wanted <= 0) {
+    message.textContent = "Enter how many hours you'd like per week.";
+    return;
+  }
+  if (slots.length === 0) {
+    message.textContent = "Select at least one time slot.";
+    return;
+  }
  
-      message.textContent = "";
-      saveAvailability({ name: name, hoursWanted: wanted, slots: slots });
-    });
+  message.textContent = "";
+  saveAvailability({ name: name, hoursWanted: wanted, slots: slots });
+});
  
     /* ------------------------------------------------
        保存する処理は、この関数の中だけにまとめてある。
@@ -85,8 +85,8 @@ function getSelectedSlots() {
        ログインを入れるときも、渡す data の name を
        ログイン中のユーザー情報に変えるだけで済む。
        ------------------------------------------------ */
-    function saveAvailability(data) {
-      result.hidden = false;
-      result.textContent = JSON.stringify(data, null, 2);   // データを読みやすい文字に変えて表示
-      message.textContent = "Saved (demo only: nothing is stored yet).";
-    }
+function saveAvailability(data) {
+  result.hidden = false;
+  result.textContent = JSON.stringify(data, null, 2);   // データを読みやすい文字に変えて表示
+  message.textContent = "Saved (demo only: nothing is stored yet).";
+}
