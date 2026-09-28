@@ -25,26 +25,33 @@
                 </ul>
             </div>
         </nav>
-    </header>
+  </header>
   <div class="page">
     <h1>Lab Availability</h1>
     <p class="note">
-      Enter your name, click the times you can work in the lab next week, then press Save.
+      Enter your name and how many hours you'd like this week, then select the times you're free. Executives will use this to assign shifts.
     </p>
-
+ 
     <!--
       名前欄は「仮」。ログインを入れるときに、この欄をログイン情報(メールアドレスなど)に置き換える。
+      希望時間数は、Execがシフトを組むときの目安になる欄。
     -->
     <div class="controls">
-      <label for="name-input">Name</label>
-      <input id="name-input" type="text" placeholder="Your name" autocomplete="off">
+      <div class="name-group">
+        <label for="name-input">Name</label>
+        <input id="name-input" type="text" placeholder="Your name" autocomplete="off">
+      </div>
+      <div class="hours-group">
+        <label for="hours-input">Hours wanted / wk</label>
+        <input id="hours-input" type="number" min="0" step="0.5" placeholder="0">
+      </div>
     </div>
-
+ 
     <div class="legend">
       <span><i class="swatch on"></i>Available</span>
       <span><i class="swatch"></i>Not selected</span>
     </div>
-
+ 
     <div class="grid-wrap">
       <table>
         <thead>
@@ -57,7 +64,7 @@
             <th>Fri</th>
           </tr>
         </thead>
-
+ 
         <!--
           1行 = 30分。
           data-time / data-day は「このマスは何曜日の何時か」の目印。
@@ -67,43 +74,43 @@
         <tbody>
           <tr data-time="09:00"><th scope="row">9:00</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
           <tr class="half" data-time="09:30"><th scope="row">9:30</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
-
+ 
           <tr data-time="10:00"><th scope="row">10:00</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
           <tr class="half" data-time="10:30"><th scope="row">10:30</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
-
+ 
           <tr data-time="11:00"><th scope="row">11:00</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
           <tr class="half" data-time="11:30"><th scope="row">11:30</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
-
+ 
           <tr data-time="12:00"><th scope="row">12:00</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
           <tr class="half" data-time="12:30"><th scope="row">12:30</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
-
+ 
           <tr data-time="13:00"><th scope="row">13:00</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
           <tr class="half" data-time="13:30"><th scope="row">13:30</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
-
+ 
           <tr data-time="14:00"><th scope="row">14:00</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
           <tr class="half" data-time="14:30"><th scope="row">14:30</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
-
+ 
           <tr data-time="15:00"><th scope="row">15:00</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
           <tr class="half" data-time="15:30"><th scope="row">15:30</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
-
+ 
           <tr data-time="16:00"><th scope="row">16:00</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
           <tr class="half" data-time="16:30"><th scope="row">16:30</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
-
+ 
           <tr data-time="17:00"><th scope="row">17:00</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
           <tr class="half" data-time="17:30"><th scope="row">17:30</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
-
+ 
           <tr data-time="18:00"><th scope="row">18:00</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
           <tr class="half" data-time="18:30"><th scope="row">18:30</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
-
+ 
           <tr data-time="19:00"><th scope="row">19:00</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
           <tr class="half" data-time="19:30"><th scope="row">19:30</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
-
+ 
           <tr data-time="20:00"><th scope="row">20:00</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
           <tr class="half" data-time="20:30"><th scope="row">20:30</th><td data-day="mon"></td><td data-day="tue"></td><td data-day="wed"></td><td data-day="thu"></td><td data-day="fri"></td></tr>
         </tbody>
       </table>
     </div>
-
+ 
     <div class="save-area">
       <p id="summary" class="summary">Selected: 0 slots (0 hours)</p>
       <button id="save-button" type="button">Save</button>
@@ -112,7 +119,7 @@
       <pre id="result" class="result" hidden></pre>
     </div>
   </div>
-
+ 
   <script>
     /* ============================================
        ここからJavaScript。
@@ -121,15 +128,16 @@
          2. 選んだ数を表示する
          3. Saveを押したら、名前と選んだ時間をまとめて表示する(仮の保存)
        ============================================ */
-
+ 
     // ページ内の部品を、あらかじめ変数に入れておく
     const cells = document.querySelectorAll("tbody td");   // 全部のマス
     const summary = document.getElementById("summary");
     const nameInput = document.getElementById("name-input");
+    const hoursInput = document.getElementById("hours-input");
     const saveButton = document.getElementById("save-button");
     const message = document.getElementById("message");
     const result = document.getElementById("result");
-
+ 
     // 1. それぞれのマスに「クリックされたら実行する処理」をつける
     cells.forEach(function (cell) {
       cell.addEventListener("click", function () {
@@ -137,12 +145,15 @@
         updateSummary();
       });
     });
-
+ 
+    // 希望時間数を変えたときも、下の表示(差分)を更新する
+    hoursInput.addEventListener("input", updateSummary);
+ 
     // マスから「tue-10:00」のような目印の文字列を作る(曜日は td、時刻は親の tr が持っている)
     function makeKey(cell) {
       return cell.dataset.day + "-" + cell.parentElement.dataset.time;
     }
-
+ 
     // 選ばれているマスの目印を、配列(リスト)にして返す
     function getSelectedSlots() {
       const slots = [];
@@ -153,31 +164,52 @@
       });
       return slots;
     }
-
-    // 2. 「選んだ数」の表示を更新する(1マス = 30分 = 0.5時間)
+ 
+    // 2. 「選んだ数」と「希望時間数との差」の表示を更新する(1マス = 30分 = 0.5時間)
     function updateSummary() {
       const count = getSelectedSlots().length;
-      summary.textContent = "Selected: " + count + " slots (" + (count * 0.5) + " hours)";
+      const selectedHours = count * 0.5;
+      const wanted = parseFloat(hoursInput.value);   // 空欄や数字以外なら NaN になる
+ 
+      let text = "Selected: " + count + " slots (" + selectedHours + " hours)";
+ 
+      if (!isNaN(wanted) && wanted > 0) {
+        const diff = selectedHours - wanted;
+        if (diff < 0) {
+          text += " — " + Math.abs(diff) + " hrs below what you asked for";
+        } else if (diff > 0) {
+          text += " — " + diff + " hrs above what you asked for";
+        } else {
+          text += " — matches what you asked for";
+        }
+      }
+ 
+      summary.textContent = text;
     }
-
+ 
     // 3. Saveボタン
     saveButton.addEventListener("click", function () {
       const name = nameInput.value.trim();
       const slots = getSelectedSlots();
-
+      const wanted = parseFloat(hoursInput.value);
+ 
       if (name === "") {
         message.textContent = "Enter your name first.";
+        return;
+      }
+      if (isNaN(wanted) || wanted <= 0) {
+        message.textContent = "Enter how many hours you'd like per week.";
         return;
       }
       if (slots.length === 0) {
         message.textContent = "Select at least one time slot.";
         return;
       }
-
+ 
       message.textContent = "";
-      saveAvailability({ name: name, slots: slots });
+      saveAvailability({ name: name, hoursWanted: wanted, slots: slots });
     });
-
+ 
     /* ------------------------------------------------
        保存する処理は、この関数の中だけにまとめてある。
        今は画面に表示するだけ。
