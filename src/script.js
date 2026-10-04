@@ -77,6 +77,7 @@ function updateSummary() {
 
 // 今が「受付期間中」かどうかを判定する
 function isSubmissionOpen() {
+  /*
   const now = new Date();
   const day = now.getDay();   // 0=日曜, 1=月曜, ..., 5=金曜, 6=土曜
   const hour = now.getHours();
@@ -84,7 +85,7 @@ function isSubmissionOpen() {
   if (day === 5 && hour >= 12) return true;   // 金曜12:00以降
   if (day === 6) return true;                 // 土曜は終日
   if (day === 0) return true;                 // 日曜も終日(23:59まで)
-
+  */
   return false;
 }
 
