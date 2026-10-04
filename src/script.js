@@ -1,3 +1,23 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyArS_lN0ekRaZApytFoneEoQIxpQctlM3E",
+  authDomain: "power-and-fuel-initiative.firebaseapp.com",
+  projectId: "power-and-fuel-initiative",
+  storageBucket: "power-and-fuel-initiative.firebasestorage.app",
+  messagingSenderId: "251543698776",
+  appId: "1:251543698776:web:8b7e81574c492137f2392d"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 const cells = document.querySelectorAll("tbody td");   // 全部のマス
 const summary = document.getElementById("summary");
 const nameInput = document.getElementById("name-input");
@@ -85,8 +105,19 @@ saveButton.addEventListener("click", function () {
        ログインを入れるときも、渡す data の name を
        ログイン中のユーザー情報に変えるだけで済む。
        ------------------------------------------------ */
-function saveAvailability(data) {
-  result.hidden = false;
-  result.textContent = JSON.stringify(data, null, 2);   // データを読みやすい文字に変えて表示
-  message.textContent = "Saved (demo only: nothing is stored yet).";
+async function saveAvailability(data) {
+  try {
+    // "availability" というコレクションに、名前をIDにして保存する
+    await setDoc(doc(db, "availability", data.name), data);
+
+    // ちゃんと保存できたか、もう一度読み込んで確認する
+    const savedDoc = await getDoc(doc(db, "availability", data.name));
+
+    result.hidden = false;
+    result.textContent = JSON.stringify(savedDoc.data(), null, 2);
+    message.textContent = "Saved!";
+  } catch (error) {
+    message.textContent = "Something went wrong: " + error.message;
+    console.error(error);
+  }
 }
