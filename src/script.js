@@ -74,6 +74,36 @@ function updateSummary() {
  
   summary.textContent = text;
 }
+
+// 今が「受付期間中」かどうかを判定する
+function isSubmissionOpen() {
+  const now = new Date();
+  const day = now.getDay();   // 0=日曜, 1=月曜, ..., 5=金曜, 6=土曜
+  const hour = now.getHours();
+
+  if (day === 5 && hour >= 12) return true;   // 金曜12:00以降
+  if (day === 6) return true;                 // 土曜は終日
+  if (day === 0) return true;                 // 日曜も終日(23:59まで)
+
+  return false;
+}
+
+// ページが開いたときに1回チェックする
+if (!isSubmissionOpen()) {
+  // マスをクリックできなくする
+  cells.forEach(function (cell) {
+    cell.style.pointerEvents = "none";
+    cell.style.opacity = "0.4";
+  });
+
+  // 名前欄・希望時間数欄・Saveボタンも無効にする
+  nameInput.disabled = true;
+  hoursInput.disabled = true;
+  saveButton.disabled = true;
+
+  // 案内文を出す
+  message.textContent = "Submissions are closed. They open Friday at 12:00 PM and close Sunday at 11:59 PM.";
+}
  
     // 3. Saveボタン
 saveButton.addEventListener("click", function () {
