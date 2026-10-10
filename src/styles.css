@@ -568,13 +568,13 @@ footer p {
     --cell-height: 24px;    /* 1マス(30分)の高さ */
 }
  
-/*body {
+body {
     margin: 0;
-    padding: 24px 16px 48px;
+    padding: 140px 16px 48px;
     font-family: system-ui, "Hiragino Sans", "Yu Gothic", sans-serif;
     color: var(--text);
     background: #ffffff;
-}*/
+}
  
 /* 全体を中央に寄せて、横幅が広がりすぎないようにする */
 .page {
