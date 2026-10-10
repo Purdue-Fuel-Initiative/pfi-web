@@ -776,6 +776,49 @@ button:focus-visible {
     white-space: pre-wrap;
 }
 
+/* Execページ: グリッドとロスターを横並びにする */
+.exec-layout {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+.exec-layout .grid-wrap {
+  flex: 1;
+}
+
+/* マスの中に入るチップ(頭文字入りの色付きラベル) */
+td.has-people {
+  display: flex;
+  padding: 0;
+}
+.chip {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* 右側のロスター */
+.roster {
+  width: 240px;
+  flex-shrink: 0;
+}
+.roster h2 {
+  font-size: 1rem;
+  margin: 0 0 12px;
+}
+.roster-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 0.85rem;
+}
+
 @media (max-width: 768px) {
     .nav-menu {
         flex-direction: column;
