@@ -827,12 +827,45 @@ td.has-people {
 }
 
 /* M6: パネル内のAssign/Removeボタン */
-.slot-detail-list li {
-  justify-content: space-between;
+.slot-detail {
+  margin: 12px 0 16px;
+  padding: 10px 14px;
+  background: #f7f7f7;
+  border: 1px solid #ececec;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  min-height: 1.4em;
 }
+.slot-detail-time {
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+.slot-detail-empty {
+  margin: 0;
+  color: #777777;
+}
+.slot-detail-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;        /* 丸ポツを消す */
+}
+.slot-detail-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+.slot-detail-list li span {
+  flex: 1;                 /* 名前の部分が余白を埋めて、ボタンが右端に押し出される */
+}
+
+.chip.assigned {
+  outline: 2px solid #222;
+  outline-offset: -2px;
+}
+
 .assign-btn,
 .remove-btn {
-  margin-left: auto;
   padding: 4px 10px;
   font-size: 0.75rem;
   border: none;
