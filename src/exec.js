@@ -22,16 +22,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// M6: 確定した人を入れておくドキュメント。週ごとに1つのドキュメントにまとめる。
+// 確定した人を入れておくドキュメント。週ごとに1つのドキュメントにまとめる。
 // 形: { slots: { "mon-14:00": ["Name1", "Name2"], ... } }
 const ASSIGNMENTS_DOC = doc(db, "assignments", "week");
 
 const cells = document.querySelectorAll("tbody td");
 const roster = document.getElementById("roster");
 const legend = document.getElementById("legend");
-const slotDetail = document.getElementById("slot-detail");   // M5で追加: クリックした時間の詳細を出す場所
+const slotDetail = document.getElementById("slot-detail");
 
-// 曜日の略称 → 表示用ラベル(M5のパネルで「Mon 14:00」みたいに出すために使う)
+// 曜日の略称 → 表示用ラベル
 const DAY_LABELS = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu" };
 
 // 人ごとに色を順番に割り当てる(何人になっても足りるよう、6色を使い回す)
@@ -65,7 +65,7 @@ async function loadMembers() {
   return members;
 }
 
-// M6: Firestoreから、確定済みの割り当てを取ってくる(まだ無ければ空の状態で返す)
+// Firestoreから、確定済みの割り当てを取ってくる(まだ無ければ空の状態で返す)
 async function loadAssignments() {
   const snap = await getDoc(ASSIGNMENTS_DOC);
   if (!snap.exists()) {
@@ -88,9 +88,20 @@ function buildSlotMap(members) {
   return map;
 }
 
-// M6: その人がそのマスで「確定済み」かどうか
+// その人がそのマスで「確定済み」かどうか
 function isAssigned(slotKey, name) {
   return (currentAssignments[slotKey] || []).includes(name);
+}
+
+// M7: その人が、今すでに何時間分アサインされてるか(1マス=30分=0.5時間として数える)
+function getAssignedHours(name) {
+  let slots = 0;
+  Object.keys(currentAssignments).forEach(function (slotKey) {
+    if (currentAssignments[slotKey].includes(name)) {
+      slots += 1;
+    }
+  });
+  return slots * 0.5;
 }
 
 // 凡例(誰が何色か)を表示する
@@ -109,7 +120,6 @@ function renderLegend(members) {
 }
 
 // グリッドの各マスに、その時間にいる人のチップを並べる。
-// M6: 確定済みの人のチップには "assigned" クラスをつけて、枠線で分かるようにする。
 function renderGrid() {
   cells.forEach(function (cell) {
     const day = cell.dataset.day;
@@ -138,7 +148,7 @@ function renderGrid() {
       cell.classList.add("selected-slot");
     }
 
-    // M5: マスをタップ(クリック)したら、その時間に空いてる人を下のパネルに表示する
+    // マスをタップ(クリック)したら、その時間に空いてる人を下のパネルに表示する
     cell.onclick = function () {
       currentSelected = { day: day, time: time };
       renderGrid();
@@ -147,7 +157,7 @@ function renderGrid() {
   });
 }
 
-// M5+M6: クリックされたマスの「曜日・時刻」「空いてる人のフルネーム一覧」「Assign/Removeボタン」を出す
+// クリックされたマスの「曜日・時刻」「空いてる人のフルネーム一覧」「Assign/Removeボタン」を出す
 function renderSlotDetail(day, time) {
   const slotKey = day + "-" + time;
   const people = currentSlotMap[slotKey] || [];
@@ -195,8 +205,31 @@ function renderSlotDetail(day, time) {
   });
 }
 
-// M6: この人をこの時間に確定させる(Firestoreに書き込んでから、画面を更新する)
+// M7: この人をこの時間に確定させる前に、2つチェックする。
+//   1. 同じ人を同じ時間に2回Assignしようとしてないか
+//   2. 確定させると、本人の希望時間数(hoursWanted)を超えてしまわないか
 async function assignPerson(slotKey, name) {
+  // チェック1: 二重Assign
+  if (isAssigned(slotKey, name)) {
+    alert(name + " is already assigned to this slot.");
+    return;
+  }
+
+  // チェック2: 希望時間数オーバー
+  const member = currentMembers.find(function (m) { return m.name === name; });
+  const hoursSoFar = getAssignedHours(name);
+  const hoursAfter = hoursSoFar + 0.5;
+
+  if (member && typeof member.hoursWanted === "number" && hoursAfter > member.hoursWanted) {
+    const proceed = window.confirm(
+      name + " asked for " + member.hoursWanted + " hrs/week, but this would put them at " +
+      hoursAfter + " hrs. Assign anyway?"
+    );
+    if (!proceed) {
+      return;
+    }
+  }
+
   await setDoc(ASSIGNMENTS_DOC, { slots: { [slotKey]: arrayUnion(name) } }, { merge: true });
 
   if (!currentAssignments[slotKey]) {
@@ -212,7 +245,7 @@ async function assignPerson(slotKey, name) {
   }
 }
 
-// M6: 確定を取り消す(Firestoreから外してから、画面を更新する)
+// 確定を取り消す(Firestoreから外してから、画面を更新する)
 async function removePerson(slotKey, name) {
   await setDoc(ASSIGNMENTS_DOC, { slots: { [slotKey]: arrayRemove(name) } }, { merge: true });
 
