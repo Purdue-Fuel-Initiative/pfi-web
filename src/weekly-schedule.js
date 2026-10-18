@@ -13,7 +13,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const ASSIGNMENTS_DOC = doc(db, "assignments", "week");
+// ExecがPublishを押した時だけ更新される、公開用のスナップショットを見る(作業中のassignmentsは見ない)
+const PUBLISHED_DOC = doc(db, "published", "current");
 
 const cells = document.querySelectorAll("tbody td");
 const emptyNote = document.getElementById("empty-note");
@@ -69,7 +70,7 @@ function renderGrid() {
 }
 
 async function init() {
-  const snap = await getDoc(ASSIGNMENTS_DOC);
+  const snap = await getDoc(PUBLISHED_DOC);
   currentSlots = snap.exists() ? (snap.data().slots || {}) : {};
 
   const anyConfirmed = Object.keys(currentSlots).some(function (key) {
