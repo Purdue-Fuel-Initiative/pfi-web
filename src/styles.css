@@ -897,6 +897,11 @@ td.has-people {
   text-overflow: ellipsis;
 }
 
+td.has-people {
+  background: var(--gold-light, #f4eee2);
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
     .nav-menu {
         flex-direction: column;
