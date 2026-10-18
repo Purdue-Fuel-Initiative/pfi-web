@@ -820,6 +820,39 @@ td.has-people {
   font-size: 0.85rem;
 }
 
+/* M6: 確定済みの人のチップに枠線をつける */
+.chip.assigned {
+  outline: 2px solid #222;
+  outline-offset: -2px;
+}
+
+/* M6: パネル内のAssign/Removeボタン */
+.slot-detail-list li {
+  justify-content: space-between;
+}
+.assign-btn,
+.remove-btn {
+  margin-left: auto;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #ffffff;
+}
+.assign-btn {
+  background: #8e6f3e;
+}
+.assign-btn:hover {
+  background: #6f552e;
+}
+.remove-btn {
+  background: #a9622f;
+}
+.remove-btn:hover {
+  background: #8a4e24;
+}
+
 @media (max-width: 768px) {
     .nav-menu {
         flex-direction: column;
