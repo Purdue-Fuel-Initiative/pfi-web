@@ -16,6 +16,10 @@ const db = getFirestore(app);
 const cells = document.querySelectorAll("tbody td");
 const roster = document.getElementById("roster");
 const legend = document.getElementById("legend");
+const slotDetail = document.getElementById("slot-detail");   // M5で追加: クリックした時間の詳細を出す場所
+
+// 曜日の略称 → 表示用ラベル(M5のパネルで「Mon 14:00」みたいに出すために使う)
+const DAY_LABELS = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu" };
 
 // 人ごとに色を順番に割り当てる(何人になっても足りるよう、6色を使い回す)
 const COLORS = ["#cfb991", "#4a6670", "#a9622f", "#6b5b7b", "#3f7d5c", "#b23b3b"];
@@ -70,7 +74,8 @@ function renderLegend(members) {
   });
 }
 
-// グリッドの各マスに、その時間にいる人のチップを並べる
+// グリッドの各マスに、その時間にいる人のチップを並べる。
+// M5: ここでマスごとに「クリックされたら何を表示するか(slotKey・people)」も一緒に仕込んでおく。
 function renderGrid(members, slotMap) {
   const colorByName = {};
   members.forEach(function (member, i) {
@@ -78,23 +83,56 @@ function renderGrid(members, slotMap) {
   });
 
   cells.forEach(function (cell) {
-    const slotKey = cell.dataset.day + "-" + cell.parentElement.dataset.time;
-    const people = slotMap[slotKey];
+    const day = cell.dataset.day;
+    const time = cell.parentElement.dataset.time;
+    const slotKey = day + "-" + time;
+    const people = slotMap[slotKey] || [];
 
     cell.innerHTML = "";
-    if (!people || people.length === 0) {
-      return;
+    cell.classList.remove("has-people", "selected-slot");
+
+    if (people.length > 0) {
+      cell.classList.add("has-people");
+      people.forEach(function (person) {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.textContent = initials(person.name);
+        chip.style.background = colorByName[person.name];
+        cell.appendChild(chip);
+      });
     }
 
-    cell.classList.add("has-people");
-    people.forEach(function (person) {
-      const chip = document.createElement("div");
-      chip.className = "chip";
-      chip.textContent = initials(person.name);
-      chip.style.background = colorByName[person.name];
-      cell.appendChild(chip);
-    });
+    // M5: マスをタップ(クリック)したら、その時間に空いてる人を下のパネルに表示する
+    cell.onclick = function () {
+      cells.forEach(function (c) { c.classList.remove("selected-slot"); });
+      cell.classList.add("selected-slot");
+      renderSlotDetail(day, time, people, colorByName);
+    };
   });
+}
+
+// M5: クリックされたマスの「曜日・時刻」と「その時間に空いてる人のフルネーム一覧」をパネルに出す
+function renderSlotDetail(day, time, people, colorByName) {
+  const label = (DAY_LABELS[day] || day) + " " + time;
+
+  if (people.length === 0) {
+    slotDetail.innerHTML =
+      "<p class='slot-detail-time'>" + label + "</p>" +
+      "<p class='slot-detail-empty'>No one marked themselves available at this time.</p>";
+    return;
+  }
+
+  let html =
+    "<p class='slot-detail-time'>" + label + " — " + people.length + " available</p>" +
+    "<ul class='slot-detail-list'>";
+  people.forEach(function (person) {
+    const color = colorByName[person.name];
+    html +=
+      "<li><i class='swatch on' style='background:" + color + ";border-color:" + color + "'></i>" +
+      person.name + "</li>";
+  });
+  html += "</ul>";
+  slotDetail.innerHTML = html;
 }
 
 // 右側のロスター(名前と希望時間数のリスト)を表示する
