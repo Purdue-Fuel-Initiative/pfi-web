@@ -23,10 +23,16 @@
   </header>
 
   <div class="page">
-    <h1>Assign the Weekly Schedule</h1>
+    <div class="page-header-row">
+      <h1>Assign the Weekly Schedule</h1>
+      <!-- M8: 確定済みシフトはもう公開ページ側で常に読み込まれてるから、
+           このボタンは「次の週に向けて、メンバーの入力をリセットする」操作として使う -->
+      <button type="button" id="publish-button" class="publish-btn">Publish &amp; reset availability</button>
+    </div>
     <p class="note">
       Each slot shows who marked themselves available this week. Click a time slot to see who's available then.
     </p>
+    <p id="publish-message" class="publish-message" hidden></p>
 
     <div class="legend" id="legend"></div>
 
