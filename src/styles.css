@@ -886,6 +886,17 @@ td.has-people {
   background: #8a4e24;
 }
 
+.confirmed-name {
+  font-size: 0.7rem;
+  padding: 2px 4px;
+  margin: 1px 0;
+  background: var(--gold-light, #f4eee2);
+  border-left: 3px solid var(--gold-dark, #8e6f3e);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @media (max-width: 768px) {
     .nav-menu {
         flex-direction: column;
