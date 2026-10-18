@@ -23,9 +23,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 確定した人を入れておくドキュメント。週ごとに1つのドキュメントにまとめる。
+// Execが作業中の割り当て(Assign/Removeのたびにここに書き込む。ホームページはここを直接見ない)
 // 形: { slots: { "mon-14:00": ["Name1", "Name2"], ... } }
 const ASSIGNMENTS_DOC = doc(db, "assignments", "week");
+
+// Publishを押した瞬間にここへコピーされる、公開用のスナップショット。ホームページはこっちを見る。
+const PUBLISHED_DOC = doc(db, "published", "current");
 
 const cells = document.querySelectorAll("tbody td");
 const roster = document.getElementById("roster");
@@ -122,27 +125,42 @@ function renderLegend(members) {
   });
 }
 
-// グリッドの各マスに、その時間にいる人のチップを並べる。
+// そのスロットに出すべき名前の一覧を作る。
+// 「今まだavailabilityにある人」と「assignmentsだけに残ってる人(Publishでavailabilityが消えた後の確定者)」の両方を含める。
+function getDisplayNamesForSlot(slotKey) {
+  const availableNames = (currentSlotMap[slotKey] || []).map(function (p) { return p.name; });
+  const assignedNames = currentAssignments[slotKey] || [];
+  const names = availableNames.slice();
+  assignedNames.forEach(function (name) {
+    if (names.indexOf(name) === -1) {
+      names.push(name);
+    }
+  });
+  return names;
+}
+
+// グリッドの各マスに、その時間にいる人(空いてる人+確定済みの人)のチップを並べる。
 function renderGrid() {
   cells.forEach(function (cell) {
     const day = cell.dataset.day;
     const time = cell.parentElement.dataset.time;
     const slotKey = day + "-" + time;
-    const people = currentSlotMap[slotKey] || [];
+    const names = getDisplayNamesForSlot(slotKey);
 
     cell.innerHTML = "";
     cell.classList.remove("has-people", "selected-slot");
 
-    if (people.length > 0) {
+    if (names.length > 0) {
       cell.classList.add("has-people");
-      people.forEach(function (person) {
+      names.forEach(function (name) {
         const chip = document.createElement("div");
         chip.className = "chip";
-        if (isAssigned(slotKey, person.name)) {
+        if (isAssigned(slotKey, name)) {
           chip.classList.add("assigned");
         }
-        chip.textContent = initials(person.name);
-        chip.style.background = currentColorByName[person.name];
+        chip.textContent = initials(name);
+        // availabilityが消えてて色が無い人は、グレーで出す
+        chip.style.background = currentColorByName[name] || "#999999";
         cell.appendChild(chip);
       });
     }
@@ -160,13 +178,13 @@ function renderGrid() {
   });
 }
 
-// クリックされたマスの「曜日・時刻」「空いてる人のフルネーム一覧」「Assign/Removeボタン」を出す
+// クリックされたマスの「曜日・時刻」「その時間の人のフルネーム一覧」「Assign/Removeボタン」を出す
 function renderSlotDetail(day, time) {
   const slotKey = day + "-" + time;
-  const people = currentSlotMap[slotKey] || [];
+  const names = getDisplayNamesForSlot(slotKey);
   const label = (DAY_LABELS[day] || day) + " " + time;
 
-  if (people.length === 0) {
+  if (names.length === 0) {
     slotDetail.innerHTML =
       "<p class='slot-detail-time'>" + label + "</p>" +
       "<p class='slot-detail-empty'>No one marked themselves available at this time.</p>";
@@ -174,20 +192,25 @@ function renderSlotDetail(day, time) {
   }
 
   let html =
-    "<p class='slot-detail-time'>" + label + " — " + people.length + " available</p>" +
+    "<p class='slot-detail-time'>" + label + " — " + names.length + "</p>" +
     "<ul class='slot-detail-list'>";
 
-  people.forEach(function (person) {
-    const color = currentColorByName[person.name];
-    const assigned = isAssigned(slotKey, person.name);
+  names.forEach(function (name) {
+    const color = currentColorByName[name] || "#999999";
+    const assigned = isAssigned(slotKey, name);
+    // availabilityがもう無い(Publish後に残ってる確定者)人は、Assignし直せないのでRemoveだけ出す
+    const hasAvailability = (currentSlotMap[slotKey] || []).some(function (p) { return p.name === name; });
+    const showButton = assigned || hasAvailability;
     html +=
       "<li>" +
         "<i class='swatch on' style='background:" + color + ";border-color:" + color + "'></i>" +
-        "<span>" + person.name + "</span>" +
-        "<button type='button' class='" + (assigned ? "remove-btn" : "assign-btn") + "' " +
-          "data-day='" + day + "' data-time='" + time + "' data-name='" + person.name + "'>" +
-          (assigned ? "Remove" : "Assign") +
-        "</button>" +
+        "<span>" + name + (assigned && !hasAvailability ? " (confirmed, no longer in this week's submissions)" : "") + "</span>" +
+        (showButton ?
+          "<button type='button' class='" + (assigned ? "remove-btn" : "assign-btn") + "' " +
+            "data-day='" + day + "' data-time='" + time + "' data-name='" + name + "'>" +
+            (assigned ? "Remove" : "Assign") +
+          "</button>"
+          : "") +
       "</li>";
   });
 
@@ -278,12 +301,13 @@ function renderRosterList(members) {
 }
 
 // M8: Publishボタンの処理。
-//   - availability コレクションのドキュメントを全部消す(=メンバーの入力を次の週に向けてリセット)
-//   - assignments(今週確定した割り当て)はそのまま残す
+//   1. 今の assignments(Execが組んだ割り当て)を published/current にコピーする → ホームページはこれを見る
+//   2. availability コレクションのドキュメントを全部消す(=メンバーの入力を次の週に向けてリセット)
+//   3. assignments(作業中の割り当て)もクリアして、Execが次の週をまっさらから組めるようにする
 async function publishAndReset() {
   const confirmed = window.confirm(
-    "This will permanently delete everyone's submitted availability, so members can submit fresh for next week. " +
-    "Confirmed assignments will be kept. This can't be undone. Continue?"
+    "This will publish the current assignments to the homepage, delete everyone's submitted availability, " +
+    "and clear the working assignment board so you can start fresh for next week. This can't be undone. Continue?"
   );
   if (!confirmed) {
     return;
@@ -293,6 +317,10 @@ async function publishAndReset() {
   publishMessage.hidden = true;
 
   try {
+    // 1. 公開用のスナップショットに今のassignmentsをコピー(前のPublish内容は丸ごと上書き)
+    await setDoc(PUBLISHED_DOC, { slots: currentAssignments }, { merge: false });
+
+    // 2. availabilityを全部消す
     const snapshot = await getDocs(collection(db, "availability"));
     const deletions = [];
     snapshot.forEach(function (docSnap) {
@@ -300,10 +328,14 @@ async function publishAndReset() {
     });
     await Promise.all(deletions);
 
+    // 3. 作業中のassignmentsもクリア(次の週はまっさらから)
+    await setDoc(ASSIGNMENTS_DOC, { slots: {} }, { merge: false });
+
     // 画面側の状態もリセットして、入力が無くなったことを反映する
     currentMembers = [];
     currentSlotMap = {};
     currentColorByName = {};
+    currentAssignments = {};
     currentSelected = null;
 
     renderLegend(currentMembers);
