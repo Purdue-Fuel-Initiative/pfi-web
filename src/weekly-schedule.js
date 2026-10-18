@@ -17,32 +17,67 @@ const ASSIGNMENTS_DOC = doc(db, "assignments", "week");
 
 const cells = document.querySelectorAll("tbody td");
 const emptyNote = document.getElementById("empty-note");
+const slotDetail = document.getElementById("slot-detail");
 
-// 確定済みの割り当てを読み込んで、各マスに名前を表示するだけ(クリック操作は無し)
+const DAY_LABELS = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu" };
+
+let currentSlots = {};     // { "mon-14:00": ["Name1", "Name2"], ... }
+let currentSelected = null;
+
+// マスをクリックしたら、その時間の確定者をパネルに出すだけ(編集操作は無い)
+function renderSlotDetail(day, time) {
+  const slotKey = day + "-" + time;
+  const names = currentSlots[slotKey] || [];
+  const label = (DAY_LABELS[day] || day) + " " + time;
+
+  if (names.length === 0) {
+    slotDetail.innerHTML =
+      "<p class='slot-detail-time'>" + label + "</p>" +
+      "<p class='slot-detail-empty'>No one is confirmed for this time yet.</p>";
+    return;
+  }
+
+  let html = "<p class='slot-detail-time'>" + label + " — " + names.length + " confirmed</p><ul class='slot-detail-list'>";
+  names.forEach(function (name) {
+    html += "<li><span>" + name + "</span></li>";
+  });
+  html += "</ul>";
+  slotDetail.innerHTML = html;
+}
+
+function renderGrid() {
+  cells.forEach(function (cell) {
+    const day = cell.dataset.day;
+    const time = cell.parentElement.dataset.time;
+    const slotKey = day + "-" + time;
+    const names = currentSlots[slotKey] || [];
+
+    cell.classList.remove("has-people", "selected-slot");
+    if (names.length > 0) {
+      cell.classList.add("has-people");
+    }
+    if (currentSelected && currentSelected.day === day && currentSelected.time === time) {
+      cell.classList.add("selected-slot");
+    }
+
+    cell.onclick = function () {
+      currentSelected = { day: day, time: time };
+      renderGrid();
+      renderSlotDetail(day, time);
+    };
+  });
+}
+
 async function init() {
   const snap = await getDoc(ASSIGNMENTS_DOC);
-  const slots = snap.exists() ? (snap.data().slots || {}) : {};
+  currentSlots = snap.exists() ? (snap.data().slots || {}) : {};
 
-  let anyConfirmed = false;
-
-  cells.forEach(function (cell) {
-    const slotKey = cell.dataset.day + "-" + cell.parentElement.dataset.time;
-    const names = slots[slotKey] || [];
-
-    cell.innerHTML = "";
-    if (names.length > 0) {
-      anyConfirmed = true;
-      cell.classList.add("has-people");
-      names.forEach(function (name) {
-        const tag = document.createElement("div");
-        tag.className = "confirmed-name";
-        tag.textContent = name;
-        cell.appendChild(tag);
-      });
-    }
+  const anyConfirmed = Object.keys(currentSlots).some(function (key) {
+    return currentSlots[key] && currentSlots[key].length > 0;
   });
 
   emptyNote.hidden = anyConfirmed;
+  renderGrid();
 }
 
 init();
