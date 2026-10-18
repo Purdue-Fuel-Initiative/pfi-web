@@ -80,7 +80,8 @@ async function loadAssignments() {
   return snap.data().slots || {};
 }
 
-// 「tue-10:00のマスには誰がいるか」の対応表を作る
+// 「tue-10:00のマスには誰がいるか」の対応表を作る。
+// 同じ人が何度もavailabilityを送信してて同じスロットに重複して入ってても、1人1マス1回だけになるようにする。
 function buildSlotMap(members) {
   const map = {};
   members.forEach(function (member) {
@@ -88,7 +89,10 @@ function buildSlotMap(members) {
       if (!map[slotKey]) {
         map[slotKey] = [];
       }
-      map[slotKey].push(member);
+      const alreadyThere = map[slotKey].some(function (m) { return m.name === member.name; });
+      if (!alreadyThere) {
+        map[slotKey].push(member);
+      }
     });
   });
   return map;
@@ -354,8 +358,17 @@ async function publishAndReset() {
 
 publishButton.addEventListener("click", publishAndReset);
 
+// 同じ名前のドキュメントが複数あったら、一番最後のものだけ残す(ロスター・凡例の重複防止)
+function dedupeByName(members) {
+  const byName = {};
+  members.forEach(function (member) {
+    byName[member.name] = member;
+  });
+  return Object.values(byName);
+}
+
 async function init() {
-  currentMembers = await loadMembers();
+  currentMembers = dedupeByName(await loadMembers());
   currentSlotMap = buildSlotMap(currentMembers);
   currentAssignments = await loadAssignments();
 
