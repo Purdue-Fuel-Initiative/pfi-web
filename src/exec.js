@@ -6,6 +6,7 @@ import {
   doc,
   getDoc,
   setDoc,
+  deleteDoc,
   arrayUnion,
   arrayRemove
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -30,6 +31,8 @@ const cells = document.querySelectorAll("tbody td");
 const roster = document.getElementById("roster");
 const legend = document.getElementById("legend");
 const slotDetail = document.getElementById("slot-detail");
+const publishButton = document.getElementById("publish-button");       // M8で追加
+const publishMessage = document.getElementById("publish-message");     // M8で追加
 
 // 曜日の略称 → 表示用ラベル
 const DAY_LABELS = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu" };
@@ -273,6 +276,51 @@ function renderRosterList(members) {
     roster.appendChild(row);
   });
 }
+
+// M8: Publishボタンの処理。
+//   - availability コレクションのドキュメントを全部消す(=メンバーの入力を次の週に向けてリセット)
+//   - assignments(今週確定した割り当て)はそのまま残す
+async function publishAndReset() {
+  const confirmed = window.confirm(
+    "This will permanently delete everyone's submitted availability, so members can submit fresh for next week. " +
+    "Confirmed assignments will be kept. This can't be undone. Continue?"
+  );
+  if (!confirmed) {
+    return;
+  }
+
+  publishButton.disabled = true;
+  publishMessage.hidden = true;
+
+  try {
+    const snapshot = await getDocs(collection(db, "availability"));
+    const deletions = [];
+    snapshot.forEach(function (docSnap) {
+      deletions.push(deleteDoc(docSnap.ref));
+    });
+    await Promise.all(deletions);
+
+    // 画面側の状態もリセットして、入力が無くなったことを反映する
+    currentMembers = [];
+    currentSlotMap = {};
+    currentColorByName = {};
+    currentSelected = null;
+
+    renderLegend(currentMembers);
+    renderGrid();
+    renderRosterList(currentMembers);
+
+    publishMessage.textContent = "Published. Availability has been reset for next week.";
+    publishMessage.hidden = false;
+  } catch (err) {
+    publishMessage.textContent = "Something went wrong while resetting availability: " + err.message;
+    publishMessage.hidden = false;
+  } finally {
+    publishButton.disabled = false;
+  }
+}
+
+publishButton.addEventListener("click", publishAndReset);
 
 async function init() {
   currentMembers = await loadMembers();
