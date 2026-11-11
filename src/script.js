@@ -94,7 +94,7 @@ if (!isSubmissionOpen()) {
   // マスをクリックできなくする
   cells.forEach(function (cell) {
     cell.style.pointerEvents = "none";
-    /cell.style.opacity = "0.4";
+    cell.style.opacity = "0.4";
   });
 
   // 名前欄・希望時間数欄・Saveボタンも無効にする
