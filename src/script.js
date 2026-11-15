@@ -87,7 +87,7 @@ function isSubmissionOpen() {
   //if (day === 0) return true;                 // 日曜も終日(23:59まで)
   
   return true;
-//}
+}
 
 // ページが開いたときに1回チェックする
 if (!isSubmissionOpen()) {
